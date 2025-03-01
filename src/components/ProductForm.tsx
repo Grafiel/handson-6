@@ -1,10 +1,11 @@
 import { UseMutateFunction } from "@tanstack/react-query";
-import React from "react";
+import React, {useEffect} from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 interface ProductFormProps {
     isEdit: boolean;
     mutateFn: UseMutateFunction<any, Error, ProductFormInput, unknown>;
+    defaultInputData?: ProductFormInput;
 }
 
 export type ProductFormInput = {
@@ -19,11 +20,26 @@ const ProductForm: React.FC<ProductFormProps> = (props) => {
     const {
         register,
         handleSubmit,
+        setValue,
         formState: { errors }
-    } = useForm<ProductFormInput>();
-    const onSubmit: SubmitHandler<ProductFormInput> = (data) => {
+      } = useForm<ProductFormInput>();
+      useEffect(() => {
+        if (props.defaultInputData) {
+          setValue("title", props.defaultInputData.title);
+          setValue("description", props.defaultInputData.description);
+          setValue("discountPercentage", props.defaultInputData.discountPercentage);
+          setValue("category", props.defaultInputData.category);
+          setValue("price", props.defaultInputData.price);
+        }
+      }, [props.defaultInputData]);
+      const onSubmit: SubmitHandler<ProductFormInput> = (data) => {
+        if (props.isEdit) {
+          if (!confirm("Are you sure want to update product data ? ")) {
+            return;
+          }
+        }
         props.mutateFn(data);
-    };
+      };
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
