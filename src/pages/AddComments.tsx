@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import axios from '../utils/AxiosInstance';
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
-import CommentFrom from '../components/CommentsForm';
+import CommentFrom from '../components/CommentForm';
 
 // Define the structure of a comment
 interface Comment {
